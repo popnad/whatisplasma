@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plasma Carousel</title>
+    <!-- Google Fonts for Stylish Text -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            /* Background Color and Image */
+            background-color: #000000; /* Black background */
+            background-image: url('https://plasmafdn.space/Plasma-brand-kit-1b5ea6087c0680af873bcdb091aa39a5');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* Full viewport height */
+            width: 100%;
+        }
+
+        /* Logo Styling */
+        .logo {
+            width: 100px; /* Adjust size as needed */
+            opacity: 0; /* Start hidden for fade-in */
+        }
+
+        h1 {
+            font-size: 2.5rem; /* Consistent font size for all text */
+            color: #fff; /* White text for contrast against the dark background */
+            line-height: 1.5; /* Spacing between lines */
+            margin: 0;
+        }
+
+        #initial-state {
+            opacity: 0; /* Start hidden for fade-in */
+        }
+
+        #plasma-trigger {
+            color: #009393; /* Brand color */
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        #plasma-trigger:hover {
+            color: #006666; /* Darker shade of the brand color for hover */
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Three-Line Layout for Carousel State */
+        #carousel-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0; /* Start hidden */
+        }
+
+        #carousel-word-container {
+            display: inline-block;
+            min-height: 1.5em; /* Prevent layout shift */
+            opacity: 1; /* Will be controlled with the entire carousel-state */
+        }
+
+        #carousel-word {
+            display: inline-block;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+            color: #fff; /* White text for the changing word */
+            font-size: 2.5rem; /* Match the font size of other lines */
+        }
+
+        #carousel-word.fade {
+            opacity: 0;
+        }
+
+        /* Glowing Circle Effect with Brand Color */
+        .highlight {
+            position: relative;
+            display: inline-block;
+        }
+
+        .highlight::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid #009393; /* Brand color */
+            border-radius: 50%;
+            box-shadow: 0 0 15px #009393, 0 0 30px #009393;
+            animation: glow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 15px #009393, 0 0 30px #009393;
+            }
+            50% {
+                box-shadow: 0 0 25px #009393, 0 0 50px #009393;
+            }
+        }
+
+        /* Typewriter Container */
+        #typewriter-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0; /* Start hidden */
+        }
+
+        #typewriter-text {
+            font-size: 2.5rem; /* Match the font size of other text */
+            color: #fff;
+            display: inline-block;
+            text-align: center;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo -->
+        <img src="https://plasmafdn.space/signed/attachment%3A3b8b8ba4-573b-4367-a399-c7057392dbbf%3AGreen_logomark.png?table=block&id=1c1ea608-7c06-80cd-b8d1-fea90bc89848&spaceId=2f9a05b0-6b70-44f2-b1c3-0ee0efe596eb&name=Green%20logomark.png&cache=v2" alt="Plasma Logo" class="logo">
+
+        <!-- Initial State -->
+        <div id="initial-state">
+            <h1>What is <span id="plasma-trigger">Plasma</span>?</h1>
+        </div>
+
+        <!-- Carousel State -->
+        <div id="carousel-state" class="hidden">
+            <h1>Plasma</h1>
+            <h1>is for</h1>
+            <div id="carousel-word-container">
+                <span id="carousel-word"></span>
+            </div>
+        </div>
+
+        <!-- Typewriter State -->
+        <div id="typewriter-state" class="hidden">
+            <h1 id="typewriter-text"></h1>
+        </div>
+    </div>
+
+    <!-- GSAP Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+    <!-- Typed.js Library for Typewriter Effect -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const initialState = document.getElementById("initial-state");
+            const carouselState = document.getElementById("carousel-state");
+            const typewriterState = document.getElementById("typewriter-state");
+            const plasmaTrigger = document.getElementById("plasma-trigger");
+            const carouselWordContainer = document.getElementById("carousel-word-container");
+            const carouselWord = document.getElementById("carousel-word");
+            const typewriterText = document.getElementById("typewriter-text");
+            const logo = document.querySelector(".logo");
+
+            // Words for the carousel (up to "Plasma is for Bitcoin’s strength")
+            const carouselWords = [
+                "stables",
+                "zero fees",
+                "speed",
+                "simplicity",
+                "remittances",
+                "DeFi", // Middle point (fastest speed)
+                "fintech",
+                "inclusion",
+                "scalability",
+                "Bitcoin’s strength"
+            ];
+
+            // Words for the typewriter effect (split into two lines)
+            const typewriterWords = [
+                "Plasma is how<br>the money moves",
+                "Plasma is for<br>everyone"
+            ];
+
+            let currentWordIndex = 0;
+
+            // Timing for the carousel (speed increases then decreases)
+            const baseDuration = 1000; // Starting duration (1 second)
+            const minDuration = 300; // Fastest duration at the middle (0.3 seconds)
+            const middleIndex = Math.floor(carouselWords.length / 2); // Middle point
+
+            // Calculate durations for each word
+            const durations = carouselWords.map((_, index) => {
+                if (index <= middleIndex) {
+                    // Speed up from baseDuration to minDuration
+                    return baseDuration - ((baseDuration - minDuration) * (index / middleIndex));
+                } else {
+                    // Slow down from minDuration back to baseDuration
+                    return minDuration + ((baseDuration - minDuration) * ((index - middleIndex) / (carouselWords.length - middleIndex - 1)));
+                }
+            });
+
+            // Fade-in animation for logo and initial text on page load
+            gsap.to(logo, {
+                opacity: 1,
+                duration: 1,
+                delay: 0.5,
+                ease: "power2.out"
+            });
+
+            gsap.to(initialState, {
+                opacity: 1,
+                duration: 1,
+                delay: 1,
+                ease: "power2.out"
+            });
+
+            // Function to show the carousel state
+            function showCarouselState() {
+                // Fade out the logo and initial state
+                gsap.to(logo, {
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "power2.in"
+                });
+
+                gsap.to(initialState, {
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "power2.in",
+                    onComplete: () => {
+                        initialState.classList.add("hidden");
+                        carouselState.classList.remove("hidden");
+                        // Set the first word before fading in
+                        carouselWord.textContent = carouselWords[currentWordIndex];
+                        if (carouselWord.textContent) {
+                            carouselWordContainer.classList.add("highlight");
+                        }
+                        // Fade in the entire carousel state (including "Plasma is for" and the word)
+                        gsap.to(carouselState, {
+                            opacity: 1,
+                            duration: 0.5,
+                            ease: "power2.out",
+                            onComplete: () => {
+                                // Move to the next word
+                                currentWordIndex++;
+                                // Start the carousel animation for the next word
+                                if (currentWordIndex < carouselWords.length) {
+                                    setTimeout(animateCarousel, durations[currentWordIndex - 1]);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Function to animate the carousel
+            function animateCarousel() {
+                // Fade out the current word and its container
+                gsap.to(carouselWordContainer, {
+                    opacity: 0,
+                    duration: 0.3,
+                    onStart: () => {
+                        // Remove the highlight class when fading out
+                        carouselWordContainer.classList.remove("highlight");
+                    },
+                    onComplete: () => {
+                        // Update the word
+                        carouselWord.textContent = carouselWords[currentWordIndex];
+                        // Add the highlight class and fade in if there is text
+                        if (carouselWord.textContent) {
+                            carouselWordContainer.classList.add("highlight");
+                            gsap.to(carouselWordContainer, {
+                                opacity: 1,
+                                duration: 0.3,
+                                ease: "power2.out"
+                            });
+                        }
+
+                        // Check if this is the last word
+                        if (currentWordIndex === carouselWords.length - 1) {
+                            // If it's the last word, fade out the entire carousel state after 1 second
+                            setTimeout(() => {
+                                gsap.to(carouselState, {
+                                    opacity: 0,
+                                    duration: 0.5,
+                                    ease: "power2.in",
+                                    onStart: () => {
+                                        // Ensure the highlight class is removed
+                                        carouselWordContainer.classList.remove("highlight");
+                                    },
+                                    onComplete: () => {
+                                        carouselState.classList.add("hidden");
+                                        carouselWord.textContent = ""; // Clear the word
+                                        transitionToTypewriter();
+                                    }
+                                });
+                            }, 1000); // Show the last carousel word for 1 second
+                        } else {
+                            // Otherwise, move to the next word and continue the carousel
+                            currentWordIndex++;
+                            setTimeout(animateCarousel, durations[currentWordIndex - 1]);
+                        }
+                    }
+                });
+            }
+
+            // Function to transition to the typewriter state
+            function transitionToTypewriter() {
+                typewriterState.classList.remove("hidden");
+                gsap.to(typewriterState, {
+                    opacity: 1,
+                    duration: 0.5,
+                    ease: "power2.out",
+                    onComplete: () => {
+                        // Start the typewriter effect
+                        startTypewriter();
+                    }
+                });
+            }
+
+            // Function to start the typewriter effect
+            function startTypewriter() {
+                const typed = new Typed("#typewriter-text", {
+                    strings: typewriterWords,
+                    typeSpeed: 40,
+                    backSpeed: 25,
+                    backDelay: 800,
+                    startDelay: 400,
+                    loop: false,
+                    showCursor: true,
+                    onComplete: () => {
+                        // After typewriter completes, fade out and reset
+                        setTimeout(() => {
+                            resetToInitialState();
+                        }, 1500); // Show the last typewriter phrase for 1.5 seconds
+                    }
+                });
+            }
+
+            // Function to reset to the initial state
+            function resetToInitialState() {
+                gsap.to(typewriterState, {
+                    opacity: 0,
+                    duration: 0.5,
+                    onComplete: () => {
+                        typewriterState.classList.add("hidden");
+                        typewriterText.innerHTML = ""; // Clear typewriter text
+                        initialState.classList.remove("hidden");
+                        // Fade in the logo and initial state again
+                        gsap.to(logo, {
+                            opacity: 1,
+                            duration: 1,
+                            ease: "power2.out"
+                        });
+                        gsap.to(initialState, {
+                            opacity: 1,
+                            duration: 1,
+                            ease: "power2.out"
+                        });
+                        currentWordIndex = 0; // Reset the word index
+                    }
+                });
+            }
+
+            // Event listener for the "Plasma" trigger
+            plasmaTrigger.addEventListener("click", showCarouselState);
+        });
+    </script>
+</body>
+</html>
