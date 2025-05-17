@@ -11,213 +11,213 @@
             padding: 0;
             box-sizing: border-box;
         }
+    body {
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #000000;
+        background-image: url('https://plasmafdn.space/Plasma-brand-kit-1b5ea6087c0680af873bcdb091aa39a5');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        overflow: hidden;
+    }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #000000;
-            background-image: url('https://plasmafdn.space/Plasma-brand-kit-1b5ea6087c0680af873bcdb091aa39a5');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            overflow: hidden;
-        }
+    .container {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        width: 100%;
+        position: relative;
+    }
 
-        .container {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            width: 100%;
-            position: relative;
-        }
+    .logo {
+        width: 100px;
+        opacity: 0;
+        position: relative;
+        z-index: 1;
+    }
 
-        .logo {
-            width: 100px;
-            opacity: 0;
-            position: relative;
-            z-index: 1;
-        }
+    h1 {
+        font-size: 2.5rem;
+        color: #fff;
+        line-height: 1.5;
+        margin: 0;
+    }
 
-        h1 {
-            font-size: 2.5rem;
-            color: #fff;
-            line-height: 1.5;
-            margin: 0;
-        }
+    #initial-state {
+        opacity: 0;
+        position: relative;
+        z-index: 2;
+    }
 
-        #initial-state {
-            opacity: 0;
-            position: relative;
-            z-index: 2;
-        }
+    #plasma-trigger {
+        color: #009393;
+        cursor: pointer;
+        transition: color 0.3s ease;
+        pointer-events: auto;
+        z-index: 3;
+        display: inline-block;
+    }
 
-        #plasma-trigger {
-            color: #009393;
-            cursor: pointer;
-            transition: color 0.3s ease;
-            pointer-events: auto;
-            z-index: 3;
-            display: inline-block;
-        }
+    #plasma-trigger:hover {
+        color: #006666;
+    }
 
-        #plasma-trigger:hover {
-            color: #006666;
-        }
+    .hidden {
+        display: none;
+    }
 
-        .hidden {
-            display: none;
-        }
+    #carousel-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 
-        #carousel-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            height: 100%;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
+    #carousel-word-container {
+        display: inline-block;
+        min-height: 1.5em;
+        opacity: 1;
+    }
 
-        #carousel-word-container {
-            display: inline-block;
-            min-height: 1.5em;
-            opacity: 1;
-        }
+    #carousel-word {
+        display: inline-block;
+        opacity: 1;
+        transition: opacity 0.5s ease;
+        color: #fff;
+        font-size: 2.5rem;
+    }
 
-        #carousel-word {
-            display: inline-block;
-            opacity: 1;
-            transition: opacity 0.5s ease;
-            color: #fff;
-            font-size: 2.5rem;
-        }
+    #carousel-word.fade {
+        opacity: 0;
+    }
 
-        #carousel-word.fade {
-            opacity: 0;
-        }
+    .highlight {
+        position: relative;
+        display: inline-block;
+    }
 
-        .highlight {
-            position: relative;
-            display: inline-block;
-        }
+    .highlight::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        border: 2px solid #009393;
+        border-radius: 50%;
+        box-shadow: 0 0 15px #009393, 0 0 30px #009393;
+        animation: glow 1.5s ease-in-out infinite;
+    }
 
-        .highlight::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            border: 2px solid #009393;
-            border-radius: 50%;
+    @keyframes glow {
+        0%, 100% {
             box-shadow: 0 0 15px #009393, 0 0 30px #009393;
-            animation: glow 1.5s ease-in-out infinite;
         }
+        50% {
+            box-shadow: 0 0 25px #009393, 0 0 50px #009393;
+        }
+    }
 
-        @keyframes glow {
-            0%, 100% {
-                box-shadow: 0 0 15px #009393, 0 0 30px #009393;
-            }
-            50% {
-                box-shadow: 0 0 25px #009393, 0 0 50px #009393;
-            }
-        }
+    #typewriter-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        width: 100%;
+    }
 
-        #typewriter-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            width: 100%;
-        }
+    #typewriter-text {
+        font-size: 2.5rem;
+        color: #fff;
+        display: inline-block;
+        text-align: center;
+        line-height: 1.5;
+        width: 100%;
+    }
 
-        #typewriter-text {
-            font-size: 2.5rem;
-            color: #fff;
-            display: inline-block;
-            text-align: center;
-            line-height: 1.5;
-            width: 100%;
-        }
+    /* Learn More Button Styling */
+    #learn-more-btn {
+        margin-top: 20px;
+        padding: 12px 30px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #fff;
+        background-color: transparent;
+        border: 2px solid #009393;
+        border-radius: 25px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        z-index: 1;
+        opacity: 0;
+    }
 
-        /* Learn More Button Styling */
-        #learn-more-btn {
-            margin-top: 20px;
-            padding: 12px 30px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #fff;
-            background-color: transparent;
-            border: 2px solid #009393;
-            border-radius: 25px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            z-index: 1;
-            opacity: 0;
-        }
+    #learn-more-btn:hover {
+        color: #000;
+    }
 
-        #learn-more-btn:hover {
-            color: #000;
-        }
+    /* Neon Fluid Effect Inside Button (Vertical Movement) */
+    #learn-more-btn::before {
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        height: 300%; /* Extra height to allow for vertical movement */
+        background: linear-gradient(to bottom, transparent, #009393 50%, transparent);
+        opacity: 0.4; /* Slightly more visible for glowing effect */
+        animation: fluid-flow-vertical 3s linear infinite;
+        z-index: -1;
+        box-shadow: 0 0 10px #009393; /* Add a subtle glow to the fluid */
+    }
 
-        /* Neon Fluid Effect Inside Button (Vertical Movement) */
-        #learn-more-btn::before {
-            content: '';
-            position: absolute;
-            top: -100%;
-            left: 0;
-            width: 100%;
-            height: 300%; /* Extra height to allow for vertical movement */
-            background: linear-gradient(to bottom, transparent, #009393 50%, transparent);
-            opacity: 0.4; /* Slightly more visible for glowing effect */
-            animation: fluid-flow-vertical 3s linear infinite;
-            z-index: -1;
-            box-shadow: 0 0 10px #009393; /* Add a subtle glow to the fluid */
+    @keyframes fluid-flow-vertical {
+        0% {
+            transform: translateY(0);
         }
+        100% {
+            transform: translateY(66.67%); /* Move the gradient down to create a looping effect */
+        }
+    }
 
-        @keyframes fluid-flow-vertical {
-            0% {
-                transform: translateY(0);
-            }
-            100% {
-                transform: translateY(66.67%); /* Move the gradient down to create a looping effect */
-            }
-        }
+    /* Neon Border Glow */
+    #learn-more-btn::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        border: 2px solid #009393;
+        border-radius: 25px;
+        box-shadow: 0 0 15px #009393, 0 0 30px #009393;
+        animation: glow 1.5s ease-in-out infinite;
+        z-index: -1;
+    }
 
-        /* Neon Border Glow */
-        #learn-more-btn::after {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            border: 2px solid #009393;
-            border-radius: 25px;
-            box-shadow: 0 0 15px #009393, 0 0 30px #009393;
-            animation: glow 1.5s ease-in-out infinite;
-            z-index: -1;
-        }
+    /* Click Effect */
+    #learn-more-btn:active {
+        box-shadow: 0 0 20px #00e6e6, 0 0 40px #00e6e6;
+        transform: scale(0.95);
+    }
+</style>
 
-        /* Click Effect */
-        #learn-more-btn:active {
-            box-shadow: 0 0 20px #00e6e6, 0 0 40px #00e6e6;
-            transform: scale(0.95);
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -237,203 +237,203 @@
             <button id="learn-more-btn">Learn More</button>
         </div>
     </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+<script>
+    const init = () => {
+        const initialState = document.getElementById("initial-state");
+        const carouselState = document.getElementById("carousel-state");
+        const typewriterState = document.getElementById("typewriter-state");
+        const plasmaTrigger = document.getElementById("plasma-trigger");
+        const carouselWordContainer = document.getElementById("carousel-word-container");
+        const carouselWord = document.getElementById("carousel-word");
+        const typewriterText = document.getElementById("typewriter-text");
+        const learnMoreBtn = document.getElementById("learn-more-btn");
+        const logo = document.querySelector(".logo");
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-    <script>
-        const init = () => {
-            const initialState = document.getElementById("initial-state");
-            const carouselState = document.getElementById("carousel-state");
-            const typewriterState = document.getElementById("typewriter-state");
-            const plasmaTrigger = document.getElementById("plasma-trigger");
-            const carouselWordContainer = document.getElementById("carousel-word-container");
-            const carouselWord = document.getElementById("carousel-word");
-            const typewriterText = document.getElementById("typewriter-text");
-            const learnMoreBtn = document.getElementById("learn-more-btn");
-            const logo = document.querySelector(".logo");
+        if (!plasmaTrigger) {
+            console.error("Plasma trigger element not found!");
+            return;
+        }
 
-            if (!plasmaTrigger) {
-                console.error("Plasma trigger element not found!");
-                return;
+        console.log("Plasma trigger element found, setting up click event");
+
+        const carouselWords = [
+            "stables",
+            "zero fees",
+            "speed",
+            "simplicity",
+            "remittances",
+            "DeFi",
+            "fintech",
+            "inclusion",
+            "scalability",
+            "Bitcoin’s strength"
+        ];
+
+        const typewriterWords = [
+            "Plasma is how<br>the money moves",
+            "Plasma is for<br>everyone"
+        ];
+
+        let currentWordIndex = 0;
+        const baseDuration = 1000;
+        const minDuration = 300;
+        const middleIndex = Math.floor(carouselWords.length / 2);
+
+        const durations = carouselWords.map((_, index) => {
+            if (index <= middleIndex) {
+                return baseDuration - ((baseDuration - minDuration) * (index / middleIndex));
+            } else {
+                return minDuration + ((baseDuration - minDuration) * ((index - middleIndex) / (carouselWords.length - middleIndex - 1)));
             }
+        });
 
-            console.log("Plasma trigger element found, setting up click event");
+        gsap.to(logo, {
+            opacity: 1,
+            duration: 1,
+            delay: 0.5,
+            ease: "power2.out"
+        });
 
-            const carouselWords = [
-                "stables",
-                "zero fees",
-                "speed",
-                "simplicity",
-                "remittances",
-                "DeFi",
-                "fintech",
-                "inclusion",
-                "scalability",
-                "Bitcoin’s strength"
-            ];
+        gsap.to(initialState, {
+            opacity: 1,
+            duration: 1,
+            delay: 1,
+            ease: "power2.out",
+            onComplete: () => {
+                console.log("Initial state animation complete, ensuring Plasma is clickable");
+                plasmaTrigger.style.pointerEvents = "auto";
+            }
+        });
 
-            const typewriterWords = [
-                "Plasma is how<br>the money moves",
-                "Plasma is for<br>everyone"
-            ];
-
-            let currentWordIndex = 0;
-            const baseDuration = 1000;
-            const minDuration = 300;
-            const middleIndex = Math.floor(carouselWords.length / 2);
-
-            const durations = carouselWords.map((_, index) => {
-                if (index <= middleIndex) {
-                    return baseDuration - ((baseDuration - minDuration) * (index / middleIndex));
-                } else {
-                    return minDuration + ((baseDuration - minDuration) * ((index - middleIndex) / (carouselWords.length - middleIndex - 1)));
-                }
-            });
-
+        function showCarouselState() {
+            console.log("Plasma clicked! Transitioning to carousel state");
             gsap.to(logo, {
-                opacity: 1,
-                duration: 1,
-                delay: 0.5,
-                ease: "power2.out"
+                opacity: 0,
+                duration: 0.5,
+                ease: "power2.in"
             });
 
             gsap.to(initialState, {
-                opacity: 1,
-                duration: 1,
-                delay: 1,
-                ease: "power2.out",
+                opacity: 0,
+                duration: 0.5,
+                ease: "power2.in",
                 onComplete: () => {
-                    console.log("Initial state animation complete, ensuring Plasma is clickable");
-                    plasmaTrigger.style.pointerEvents = "auto";
+                    initialState.classList.add("hidden");
+                    carouselState.classList.remove("hidden");
+                    carouselWord.textContent = carouselWords[currentWordIndex];
+                    if (carouselWord.textContent) {
+                        carouselWordContainer.classList.add("highlight");
+                    }
+                    gsap.to(carouselState, {
+                        opacity: 1,
+                        duration: 0.5,
+                        ease: "power2.out",
+                        onComplete: () => {
+                            currentWordIndex++;
+                            if (currentWordIndex < carouselWords.length) {
+                                setTimeout(animateCarousel, durations[currentWordIndex - 1]);
+                            }
+                        }
+                    });
                 }
             });
+        }
 
-            function showCarouselState() {
-                console.log("Plasma clicked! Transitioning to carousel state");
-                gsap.to(logo, {
-                    opacity: 0,
-                    duration: 0.5,
-                    ease: "power2.in"
-                });
-
-                gsap.to(initialState, {
-                    opacity: 0,
-                    duration: 0.5,
-                    ease: "power2.in",
-                    onComplete: () => {
-                        initialState.classList.add("hidden");
-                        carouselState.classList.remove("hidden");
-                        carouselWord.textContent = carouselWords[currentWordIndex];
-                        if (carouselWord.textContent) {
-                            carouselWordContainer.classList.add("highlight");
-                        }
-                        gsap.to(carouselState, {
+        function animateCarousel() {
+            gsap.to(carouselWordContainer, {
+                opacity: 0,
+                duration: 0.3,
+                onStart: () => {
+                    carouselWordContainer.classList.remove("highlight");
+                },
+                onComplete: () => {
+                    carouselWord.textContent = carouselWords[currentWordIndex];
+                    if (carouselWord.textContent) {
+                        carouselWordContainer.classList.add("highlight");
+                        gsap.to(carouselWordContainer, {
                             opacity: 1,
-                            duration: 0.5,
-                            ease: "power2.out",
-                            onComplete: () => {
-                                currentWordIndex++;
-                                if (currentWordIndex < carouselWords.length) {
-                                    setTimeout(animateCarousel, durations[currentWordIndex - 1]);
-                                }
-                            }
+                            duration: 0.3,
+                            ease: "power2.out"
                         });
                     }
-                });
-            }
 
-            function animateCarousel() {
-                gsap.to(carouselWordContainer, {
-                    opacity: 0,
-                    duration: 0.3,
-                    onStart: () => {
-                        carouselWordContainer.classList.remove("highlight");
-                    },
-                    onComplete: () => {
-                        carouselWord.textContent = carouselWords[currentWordIndex];
-                        if (carouselWord.textContent) {
-                            carouselWordContainer.classList.add("highlight");
-                            gsap.to(carouselWordContainer, {
-                                opacity: 1,
-                                duration: 0.3,
-                                ease: "power2.out"
+                    if (currentWordIndex === carouselWords.length - 1) {
+                        setTimeout(() => {
+                            gsap.to(carouselState, {
+                                opacity: 0,
+                                duration: 0.5,
+                                ease: "power2.in",
+                                onStart: () => {
+                                    carouselWordContainer.classList.remove("highlight");
+                                },
+                                onComplete: () => {
+                                    carouselState.classList.add("hidden");
+                                    carouselWord.textContent = "";
+                                    transitionToTypewriter();
+                                }
                             });
-                        }
-
-                        if (currentWordIndex === carouselWords.length - 1) {
-                            setTimeout(() => {
-                                gsap.to(carouselState, {
-                                    opacity: 0,
-                                    duration: 0.5,
-                                    ease: "power2.in",
-                                    onStart: () => {
-                                        carouselWordContainer.classList.remove("highlight");
-                                    },
-                                    onComplete: () => {
-                                        carouselState.classList.add("hidden");
-                                        carouselWord.textContent = "";
-                                        transitionToTypewriter();
-                                    }
-                                });
-                            }, 1000);
-                        } else {
-                            currentWordIndex++;
-                            setTimeout(animateCarousel, durations[currentWordIndex - 1]);
-                        }
+                        }, 1000);
+                    } else {
+                        currentWordIndex++;
+                        setTimeout(animateCarousel, durations[currentWordIndex - 1]);
                     }
-                });
-            }
+                }
+            });
+        }
 
-            function transitionToTypewriter() {
-                typewriterState.classList.remove("hidden");
-                gsap.to(typewriterState, {
-                    opacity: 1,
-                    duration: 0.5,
-                    ease: "power2.out",
-                    onComplete: () => {
-                        startTypewriter();
+        function transitionToTypewriter() {
+            typewriterState.classList.remove("hidden");
+            gsap.to(typewriterState, {
+                opacity: 1,
+                duration: 0.5,
+                ease: "power2.out",
+                onComplete: () => {
+                    startTypewriter();
+                }
+            });
+        }
+
+        function startTypewriter() {
+            const typed = new Typed("#typewriter-text", {
+                strings: typewriterWords,
+                typeSpeed: 40,
+                backSpeed: 25,
+                backDelay: 800,
+                startDelay: 400,
+                loop: false,
+                showCursor: true,
+                onStringTyped: (arrayPos) => {
+                    if (arrayPos === 1) {
+                        gsap.to(learnMoreBtn, {
+                            opacity: 1,
+                            duration: 1,
+                            ease: "power2.out"
+                        });
                     }
-                });
-            }
-
-            function startTypewriter() {
-                const typed = new Typed("#typewriter-text", {
-                    strings: typewriterWords,
-                    typeSpeed: 40,
-                    backSpeed: 25,
-                    backDelay: 800,
-                    startDelay: 400,
-                    loop: false,
-                    showCursor: true,
-                    onStringTyped: (arrayPos) => {
-                        if (arrayPos === 1) {
-                            gsap.to(learnMoreBtn, {
-                                opacity: 1,
-                                duration: 1,
-                                ease: "power2.out"
-                            });
-                        }
-                    }
-                });
-            }
-
-            plasmaTrigger.addEventListener("click", (e) => {
-                console.log("Click event triggered on Plasma!");
-                e.preventDefault();
-                showCarouselState();
+                }
             });
+        }
 
-            plasmaTrigger.addEventListener("mousedown", () => {
-                console.log("Mouse down on Plasma trigger");
-            });
+        plasmaTrigger.addEventListener("click", (e) => {
+            console.log("Click event triggered on Plasma!");
+            e.preventDefault();
+            showCarouselState();
+        });
 
-            learnMoreBtn.addEventListener("click", () => {
-                console.log("Learn More clicked!");
-                window.location.href = "learn-more.html"; // Redirect to the new globe page
-            });
-        };
+        plasmaTrigger.addEventListener("mousedown", () => {
+            console.log("Mouse down on Plasma trigger");
+        });
 
-        window.addEventListener("load", init);
-    </script>
+        learnMoreBtn.addEventListener("click", () => {
+            console.log("Learn More clicked!");
+            window.location.href = "learn-more.html";
+        });
+    };
+
+    window.addEventListener("load", init);
+</script>
+
 </body>
 </html>
