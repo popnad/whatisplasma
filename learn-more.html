@@ -19,33 +19,29 @@
             overflow: hidden;
             height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 20px;
-            z-index: 2;
-            text-shadow: 0 0 10px #009393;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
         }
 
         #globe-container {
             width: 100%;
-            height: 80vh;
+            height: 100%; /* Full height to ensure centering */
+            max-width: 1200px; /* Optional: Limit max width for larger screens */
             position: relative;
+            display: flex;
+            justify-content: center; /* Center canvas inside container */
+            align-items: center;
         }
 
         canvas {
             width: 100%;
             height: 100%;
+            max-width: 100%;
+            max-height: 100%;
         }
     </style>
 </head>
 <body>
-    <h1>Moving money worldwide on the globe is easy AF with Plasma</h1>
     <div id="globe-container"></div>
 
     <!-- Three.js and three-globe dependencies -->
@@ -56,7 +52,7 @@
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight * 0.8);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('globe-container').appendChild(renderer.domElement);
 
         // Initialize three-globe
@@ -76,8 +72,8 @@
             uniforms: {
                 globeTexture: { type: 't', value: globeTexture },
                 glowColor: { type: 'c', value: new THREE.Color(0x009393) },
-                glowIntensity: { type: 'f', value: 1.2 }, // Increased glow intensity
-                baseBrightness: { type: 'f', value: 2.0 } // Increased base brightness
+                glowIntensity: { type: 'f', value: 1.2 },
+                baseBrightness: { type: 'f', value: 2.0 }
             },
             vertexShader: `
                 varying vec2 vUv;
@@ -94,16 +90,12 @@
                 varying vec2 vUv;
                 void main() {
                     vec4 texColor = texture2D(globeTexture, vUv);
-                    // Use the texture's brightness to determine landmasses (land is brighter in earth-night.jpg)
                     float brightness = (texColor.r + texColor.g + texColor.b) / 3.0;
-                    // Increase base brightness of landmasses
                     vec3 baseColor = texColor.rgb * baseBrightness;
-                    // Apply a more pronounced glow to landmasses
                     vec3 glow = glowColor * brightness * glowIntensity;
                     vec3 color = baseColor + glow;
-                    // Ensure oceans remain dark by using a sharper threshold for glow
                     float glowFactor = brightness > 0.1 ? clamp(brightness * 3.0, 0.0, 1.0) : 0.0;
-                    gl_FragColor = vec4(color * glowFactor, 0.6); // Increased opacity for visibility
+                    gl_FragColor = vec4(color * glowFactor, 0.6);
                 }
             `,
             transparent: true
@@ -235,9 +227,9 @@
 
         // Handle window resize
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / (window.innerHeight * 0.8);
+            camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight * 0.8);
+            renderer.setSize(window.innerWidth, window.innerHeight);
         });
     </script>
 </body>
