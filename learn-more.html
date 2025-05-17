@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn More - Plasma Global Transfers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+            z-index: 2;
+            text-shadow: 0 0 10px #009393;
+        }
+
+        #globe-container {
+            width: 100%;
+            height: 80vh;
+            position: relative;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Moving money worldwide on the globe is easy AF with Plasma</h1>
+    <div id="globe-container"></div>
+
+    <!-- Three.js and three-globe dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://unpkg.com/three-globe@2.24.8/dist/three-globe.min.js"></script>
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight * 0.8);
+        document.getElementById('globe-container').appendChild(renderer.domElement);
+
+        // Initialize three-globe
+        const globe = new ThreeGlobe()
+            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+            .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
+            .showAtmosphere(true)
+            .atmosphereColor('#009393')
+            .atmosphereAltitude(0.25);
+
+        // Load the globe texture to use as a mask for glowing landmasses
+        const textureLoader = new THREE.TextureLoader();
+        const globeTexture = textureLoader.load('//unpkg.com/three-globe/example/img/earth-night.jpg');
+
+        // Custom shader material for the globe with brighter, more glowing landmasses
+        const customMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                globeTexture: { type: 't', value: globeTexture },
+                glowColor: { type: 'c', value: new THREE.Color(0x009393) },
+                glowIntensity: { type: 'f', value: 1.2 }, // Increased glow intensity
+                baseBrightness: { type: 'f', value: 2.0 } // Increased base brightness
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform sampler2D globeTexture;
+                uniform vec3 glowColor;
+                uniform float glowIntensity;
+                uniform float baseBrightness;
+                varying vec2 vUv;
+                void main() {
+                    vec4 texColor = texture2D(globeTexture, vUv);
+                    // Use the texture's brightness to determine landmasses (land is brighter in earth-night.jpg)
+                    float brightness = (texColor.r + texColor.g + texColor.b) / 3.0;
+                    // Increase base brightness of landmasses
+                    vec3 baseColor = texColor.rgb * baseBrightness;
+                    // Apply a more pronounced glow to landmasses
+                    vec3 glow = glowColor * brightness * glowIntensity;
+                    vec3 color = baseColor + glow;
+                    // Ensure oceans remain dark by using a sharper threshold for glow
+                    float glowFactor = brightness > 0.1 ? clamp(brightness * 3.0, 0.0, 1.0) : 0.0;
+                    gl_FragColor = vec4(color * glowFactor, 0.6); // Increased opacity for visibility
+                }
+            `,
+            transparent: true
+        });
+
+        globe.globeMaterial(customMaterial);
+
+        scene.add(globe);
+
+        // Custom glow effect for the outer atmosphere
+        const glowGeometry = new THREE.SphereGeometry(100, 32, 32);
+        const glowMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                c: { type: 'f', value: 0.1 },
+                p: { type: 'f', value: 2.5 },
+                glowColor: { type: 'c', value: new THREE.Color(0x009393) },
+                viewVector: { type: 'v3', value: camera.position }
+            },
+            vertexShader: `
+                varying vec3 vNormal;
+                varying vec3 vPosition;
+                void main() {
+                    vNormal = normalize(normalMatrix * normal);
+                    vPosition = position;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform vec3 glowColor;
+                uniform float c;
+                uniform float p;
+                varying vec3 vNormal;
+                varying vec3 vPosition;
+                uniform vec3 viewVector;
+                void main() {
+                    float intensity = pow(c - dot(vNormal, normalize(viewVector - vPosition)), p);
+                    gl_FragColor = vec4(glowColor * intensity, intensity);
+                }
+            `,
+            side: THREE.BackSide,
+            blending: THREE.AdditiveBlending,
+            transparent: true
+        });
+        const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial);
+        glowMesh.scale.multiplyScalar(1.01);
+        scene.add(glowMesh);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xbbbbbb, 0.4);
+        scene.add(ambientLight);
+
+        const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.9);
+        directionalLight1.position.set(0.5, 0, 0.866);
+        scene.add(directionalLight1);
+
+        const directionalLight2 = new THREE.DirectionalLight(0xaaaaaa, 0.6);
+        directionalLight2.position.set(-0.5, 0, -0.866);
+        scene.add(directionalLight2);
+
+        camera.position.z = 200;
+
+        // Expanded list of countries
+        const countries = [
+            { name: "USA", lat: 37.0902, lon: -95.7129 },
+            { name: "India", lat: 20.5937, lon: 78.9629 },
+            { name: "Philippines", lat: 12.8797, lon: 121.7740 },
+            { name: "Brazil", lat: -14.2350, lon: -51.9253 },
+            { name: "UK", lat: 55.3781, lon: -3.4360 },
+            { name: "China", lat: 35.8617, lon: 104.1954 },
+            { name: "Japan", lat: 36.2048, lon: 138.2529 },
+            { name: "South Africa", lat: -30.5595, lon: 22.9375 },
+            { name: "Australia", lat: -25.2744, lon: 133.7751 },
+            { name: "Germany", lat: 51.1657, lon: 10.4515 },
+            { name: "Canada", lat: 56.1304, lon: -106.3468 },
+            { name: "Mexico", lat: 23.6345, lon: -102.5528 }
+        ];
+
+        // Function to generate random transfer data
+        function generateTransfer() {
+            const senderIndex = Math.floor(Math.random() * countries.length);
+            let receiverIndex;
+            do {
+                receiverIndex = Math.floor(Math.random() * countries.length);
+            } while (receiverIndex === senderIndex);
+
+            const sender = countries[senderIndex];
+            const receiver = countries[receiverIndex];
+
+            return {
+                startLat: sender.lat,
+                startLng: sender.lon,
+                endLat: receiver.lat,
+                endLng: receiver.lon,
+                color: '#009393'
+            };
+        }
+
+        // Initialize arcs data with 10 transfers
+        let arcsData = Array.from({ length: 10 }, generateTransfer);
+
+        // Arcs to represent transfers
+        globe
+            .arcsData(arcsData)
+            .arcColor('color')
+            .arcDashLength(0.9)
+            .arcDashGap(4)
+            .arcDashAnimateTime(1500)
+            .arcStroke(1.2);
+
+        // Function to update transfers periodically
+        function updateTransfers() {
+            const newTransfer = generateTransfer();
+            arcsData.shift();
+            arcsData.push(newTransfer);
+            globe.arcsData(arcsData);
+            setTimeout(updateTransfers, 3000);
+        }
+
+        setTimeout(updateTransfers, 3000);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            globe.rotation.y += 0.002;
+            glowMaterial.uniforms.viewVector.value.copy(camera.position);
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / (window.innerHeight * 0.8);
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight * 0.8);
+        });
+    </script>
+</body>
+</html>
