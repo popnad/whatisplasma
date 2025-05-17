@@ -27,6 +27,8 @@
             width: 100%;
             height: 100%;
             max-width: 1200px;
+            max-height: 1200px; /* Ensure height scales with width to maintain aspect ratio */
+            aspect-ratio: 1 / 1; /* Force a square aspect ratio for the container */
             position: relative;
             display: flex;
             justify-content: center;
@@ -36,8 +38,6 @@
         canvas {
             width: 100%;
             height: 100%;
-            max-width: 100%;
-            max-height: 100%;
         }
     </style>
 </head>
@@ -49,11 +49,21 @@
     <script src="https://unpkg.com/three-globe@2.24.8/dist/three-globe.min.js"></script>
     <script>
         // Scene setup
+        const globeContainer = document.getElementById('globe-container');
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000); // Initial aspect ratio set to 1 (square)
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('globe-container').appendChild(renderer.domElement);
+
+        // Set initial renderer size based on container dimensions
+        const updateRendererSize = () => {
+            const width = globeContainer.clientWidth;
+            const height = globeContainer.clientHeight;
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        };
+        updateRendererSize();
+        globeContainer.appendChild(renderer.domElement);
 
         // Initialize three-globe
         const globe = new ThreeGlobe()
@@ -219,29 +229,23 @@
         setTimeout(updateTransfers, 3000);
 
         // Zoom and tilt functionality
-        const minZoom = 100; // Closest zoom level
-        const maxZoom = 300; // Farthest zoom level
-        const zoomSpeed = 10; // Zoom sensitivity
-        const tiltSpeed = 0.002; // Tilt sensitivity
+        const minZoom = 100;
+        const maxZoom = 300;
+        const zoomSpeed = 10;
+        const tiltSpeed = 0.002;
 
-        // Add mouse wheel event listener for zooming
         window.addEventListener('wheel', (event) => {
-            event.preventDefault(); // Prevent page scrolling
+            event.preventDefault();
 
-            // Calculate new zoom level (camera z position)
             let newZ = camera.position.z + event.deltaY * zoomSpeed * 0.01;
-            newZ = Math.max(minZoom, Math.min(maxZoom, newZ)); // Clamp zoom level
+            newZ = Math.max(minZoom, Math.min(maxZoom, newZ));
 
-            // Update camera position
             camera.position.z = newZ;
 
-            // Calculate tilt based on zoom level
-            // Map zoom level to tilt angle (closer zoom -> more upward tilt)
-            const tiltRange = 0.5; // Max tilt angle in radians
+            const tiltRange = 0.5;
             const normalizedZoom = (newZ - minZoom) / (maxZoom - minZoom);
-            const tiltAngle = tiltRange * (1 - normalizedZoom); // More tilt when zoomed in
+            const tiltAngle = tiltRange * (1 - normalizedZoom);
 
-            // Apply tilt by rotating the globe on the X-axis
             globe.rotation.x = tiltAngle;
         }, { passive: false });
 
@@ -256,9 +260,7 @@
 
         // Handle window resize
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            updateRendererSize();
         });
     </script>
 </body>
